@@ -1,0 +1,19 @@
+package huskylens.java;
+public enum AlgorithmEnum {
+    ALGORITHM_OBJECT_TRACKING("0100"),
+    ALGORITHM_FACE_RECOGNITION("0000"),
+    ALGORITHM_OBJECT_RECOGNITION("0200"),
+    ALGORITHM_LINE_TRACKING("0300"),
+    ALGORITHM_COLOR_RECOGNITION("0400"),
+    ALGORITHM_TAG_RECOGNITION("0500"),
+    ALGORITHM_OBJECT_CLASSIFICATION("0600"),
+    ALGORITHM_QR_CODE_RECOGNTITION("0700"),
+    ALGORITHM_BARCODE_RECOGNTITION("0800");
+
+    public final String byteID;
+
+    private AlgorithmEnum(String byteID){
+        this.byteID = byteID;
+    }
+
+}
