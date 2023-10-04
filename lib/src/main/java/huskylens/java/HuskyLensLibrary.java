@@ -1,5 +1,6 @@
 package huskylens.java;
 import java.lang.Thread;
+import java.lang.Byte;
 import com.fazecast.jSerialComm.SerialPort;
 
 
@@ -35,7 +36,14 @@ public class HuskyLensLibrary {
         } catch (Exception e) {
             System.out.println(e);
         }
-
+        this.comPort.openPort();
+        try {
+            Thread.sleep(200)
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+        this.comPort.flushIOBuffers();
+        this.comPort.flushDataListener();
     }
 
     public HuskyLensLibrary(int channel, int address){
@@ -44,8 +52,58 @@ public class HuskyLensLibrary {
         this.address = address;
     }
 
+    private byte commandToBytes(String command){
+        return Byte.decode(command);
+    }
 
-    public boolean getProtocol(){
-        return this.protocol;
+    private void writeToHuskyLens(Byte command){
+        if(this.protocol){
+            this.comPort.flushIOBuffers();
+            this.comPort.flushDataListener();
+            this.comPort.writeBytes(this.comPort.getDeviceWriteBufferSize(), command.byteValue());
+        }else{
+            //TODO I2C WRITE
+            System.out.println("Argle Bargle");
+        }
+    }
+
+    public processHuskyLensData
+
+    public void pingConnection(){
+
+    }
+
+    public int setI2CChannel(int channel){
+        this.channel = channel;
+    }
+
+    public int setI2CAddress(int address) {
+        this.address = address;
+    }
+
+    public void setBaudRate(int baudRate){
+        this.baudRate = baudRate;
+        this.comPort.setBaudRate(this.baudRate);
+    }
+
+    public void setComPort(SerialPort comPort, int baudRate){
+        this.comPort = comPort;
+        this.comPort.setBaudRate(baudRate);
+    }
+
+    public SerialPort getComPort(){
+        return this.comPort;
+    }
+
+    public int getBaudRate(){
+        return this.baudRate;
+    }
+
+    public int getI2CChannel(){
+        return this.channel;
+    }
+
+    public int getI2CAddress(){
+        return this.address;
     }
 }
