@@ -2,12 +2,13 @@ package huskylens.java;
 import java.lang.Thread;
 import java.lang.Byte;
 import com.fazecast.jSerialComm.SerialPort;
+import io.helins.linux.i2c.*;
 
 
 public class HuskyLensLibrary {
-    private static final String COMMAND_HEADER_AND_ADDRESS = "55AA11";
-    private static final int DATABIT_LENGTH = 8;
-    private static final int SERIAL_TIMEOUT = 500;
+    private final String COMMAND_HEADER_AND_ADDRESS = "55AA11";
+    private final int DATABIT_LENGTH = 8;
+    private final int SERIAL_TIMEOUT = 500;
     private boolean protocol;
     private SerialPort comPort;
     private int baudRate;
@@ -20,7 +21,7 @@ public class HuskyLensLibrary {
         this.baudRate = baudRate;
         this.channel = channel;
         this.address = address;
-
+        
     }
 
     public HuskyLensLibrary(SerialPort comPort, int baudRate){
@@ -38,7 +39,7 @@ public class HuskyLensLibrary {
         }
         this.comPort.openPort();
         try {
-            Thread.sleep(200)
+            Thread.sleep(200);
         }catch (Exception e) {
             System.out.println(e);
         }
@@ -53,21 +54,28 @@ public class HuskyLensLibrary {
     }
 
     private byte commandToBytes(String command){
-        return Byte.decode(command);
+        return command.getBytes();
     }
 
-    private void writeToHuskyLens(Byte command){
+    private void writeToHuskyLens(byte[] command){
         if(this.protocol){
             this.comPort.flushIOBuffers();
             this.comPort.flushDataListener();
-            this.comPort.writeBytes(this.comPort.getDeviceWriteBufferSize(), command.byteValue());
+            this.comPort.writeBytes(command, command.length);
         }else{
             //TODO I2C WRITE
             System.out.println("Argle Bargle");
         }
     }
 
-    public processHuskyLensData
+    public String[] processHuskyLensData() {
+        
+        try {
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
 
     public void pingConnection(){
 

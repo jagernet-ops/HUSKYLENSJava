@@ -27,6 +27,8 @@ dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
 
     implementation 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
+
+    implementation 'io.helins:linux-i2c:1.0.2'
 }
 
 tasks.named('test') {
