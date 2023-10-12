@@ -39,10 +39,23 @@ public class HuskyLensLibrary {
         }
         this.comPort.openPort();
         try {
-            Thread.sleep(200);
+            Thread.sleep(2000);
         }catch (Exception e) {
             System.out.println(e);
         }
+        this.pingConnection();
+        try {
+            Thread.sleep(500);
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+        this.pingConnection();
+        try {
+            Thread.sleep(500);
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+        this.pingConnection();
         this.comPort.flushIOBuffers();
         this.comPort.flushDataListener();
     }
@@ -53,24 +66,26 @@ public class HuskyLensLibrary {
         this.address = address;
     }
 
-    private byte commandToBytes(String command){
+    private byte[] commandToBytes(String command){
         return command.getBytes();
     }
 
     private void writeToHuskyLens(byte[] command){
-        if(this.protocol){
-            this.comPort.flushIOBuffers();
-            this.comPort.flushDataListener();
-            this.comPort.writeBytes(command, command.length);
-        }else{
-            //TODO I2C WRITE
-            System.out.println("Argle Bargle");
-        }
+        this.comPort.flushIOBuffers();
+        this.comPort.flushDataListener();
+        this.comPort.writeBytes(command, command.length);
     }
 
-    public String[] processHuskyLensData() {
-        
+    public void processHuskyLensData() {
         try {
+            byte[] byteArray = new byte[5];
+            this.comPort.readBytes(byteArray, 5);
+            Byte byteIndex = new Byte(byteArray[3]);
+            byte[] secondByteArray = new byte[byteIndex.intValue()];
+            this.comPort.readBytes(secondByteArray, byteIndex.intValue());
+            byte[] thirdByteArray = new byte[1];
+            this.comPort.readBytes(thirdByteArray, 1);
+            byte[] finalByteArray = new byte[byteArray.length+secondByteArray.length+thirdByteArray.length];
             
         } catch (Exception e) {
             // TODO: handle exception
@@ -78,14 +93,15 @@ public class HuskyLensLibrary {
     }
 
     public void pingConnection(){
-
+        byte[] command = this.commandToBytes(COMMAND_HEADER_AND_ADDRESS+"002c3c");
+        this.writeToHuskyLens(command);
     }
 
-    public int setI2CChannel(int channel){
+    public void setI2CChannel(int channel){
         this.channel = channel;
     }
 
-    public int setI2CAddress(int address) {
+    public void setI2CAddress(int address) {
         this.address = address;
     }
 
