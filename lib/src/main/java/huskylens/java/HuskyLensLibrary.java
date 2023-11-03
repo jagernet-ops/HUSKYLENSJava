@@ -2,7 +2,6 @@ package huskylens.java;
 import java.lang.Thread;
 import java.lang.Byte;
 import com.fazecast.jSerialComm.SerialPort;
-import io.helins.linux.i2c.*;
 
 
 public class HuskyLensLibrary {
@@ -76,6 +75,11 @@ public class HuskyLensLibrary {
         this.comPort.writeBytes(command, command.length);
     }
 
+    private byte[] getDataHeaders(byte[] byteArray){
+        byte[] dataHeaders = new byte[5];
+        return dataHeaders;
+    }
+
     public void processHuskyLensData() {
         try {
             byte[] byteArray = new byte[5];
@@ -86,7 +90,17 @@ public class HuskyLensLibrary {
             byte[] thirdByteArray = new byte[1];
             this.comPort.readBytes(thirdByteArray, 1);
             byte[] finalByteArray = new byte[byteArray.length+secondByteArray.length+thirdByteArray.length];
-            
+            for(int i = 0; i < (5+secondByteArray.length); i++){
+                if(i < (byteArray.length-1)){
+                    finalByteArray[i] = byteArray[i];
+                }else{
+                    secondByteArray[i] = byteArray[i];
+                }
+            }
+            finalByteArray[finalByteArray.length-1] = thirdByteArray[0];
+            for(byte index : finalByteArray){
+                System.out.println(index);
+            }
         } catch (Exception e) {
             // TODO: handle exception
         }

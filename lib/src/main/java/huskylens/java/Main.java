@@ -8,6 +8,7 @@ public class Main {
         for(int i = 0; i < serialDevices.length; i++){
             if(serialDevices[i].getDescriptivePortName().contains("CP210x")){
                 hLibrary = new HuskyLensLibrary(serialDevices[i], 3000000);
+                hLibrary.processHuskyLensData();
             }
         }
     }
