@@ -106,38 +106,4 @@ public class HuskyLensLibrary {
         byte[] command = this.commandToBytes(COMMAND_HEADER_AND_ADDRESS+"002c3c");
         this.writeToHuskyLens(command);
     }
-
-    public void setI2CChannel(int channel){
-        this.channel = channel;
-    }
-
-    public void setI2CAddress(int address) {
-        this.address = address;
-    }
-
-    public void setBaudRate(int baudRate){
-        this.baudRate = baudRate;
-        this.comPort.setBaudRate(this.baudRate);
-    }
-
-    public void setComPort(SerialPort comPort, int baudRate){
-        this.comPort = comPort;
-        this.comPort.setBaudRate(baudRate);
-    }
-
-    public SerialPort getComPort(){
-        return this.comPort;
-    }
-
-    public int getBaudRate(){
-        return this.baudRate;
-    }
-
-    public int getI2CChannel(){
-        return this.channel;
-    }
-
-    public int getI2CAddress(){
-        return this.address;
-    }
 }

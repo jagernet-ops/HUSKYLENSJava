@@ -6,7 +6,6 @@ public class Block {
     private int height;
     private int ID;
     private boolean isLearned;
-    private String type;
 
     public Block(int xPosition, int yPosition, int width, int height, int ID){
         this.xPosition = xPosition;
@@ -19,7 +18,6 @@ public class Block {
         }else{
             this.isLearned = false;
         }
-        this.type = "BLOCK";
     }
 
     public int getXPosition(){
@@ -44,9 +42,5 @@ public class Block {
 
     public boolean getIsLearned(){
         return this.isLearned;
-    }
-
-    public String getType(){
-        return this.type;
     }
 }
