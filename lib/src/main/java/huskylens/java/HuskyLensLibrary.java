@@ -1,6 +1,7 @@
 package huskylens.java;
-import java.lang.Thread;
-import java.lang.Byte;
+
+import java.util.ArrayList;
+
 import com.fazecast.jSerialComm.SerialPort;
 
 
@@ -27,7 +28,7 @@ public class HuskyLensLibrary {
         this.protocol = ProtocolEnum.SERIALPORT.value;
         this.comPort = comPort;
         this.baudRate = baudRate;
-        this.comPort.setComPortParameters(this.baudRate, this.DATABIT_LENGTH, comPort.ONE_STOP_BIT, comPort.NO_PARITY);
+        this.comPort.setComPortParameters(this.baudRate, this.DATABIT_LENGTH, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
         this.comPort.setComPortTimeouts(SERIAL_TIMEOUT, SERIAL_TIMEOUT, SERIAL_TIMEOUT);
         this.comPort.clearDTR();
         this.comPort.clearRTS();
@@ -81,67 +82,28 @@ public class HuskyLensLibrary {
     }
 
     public void processHuskyLensData() {
-        try {
-            byte[] byteArray = new byte[5];
-            this.comPort.readBytes(byteArray, 5);
-            Byte byteIndex = new Byte(byteArray[3]);
-            byte[] secondByteArray = new byte[byteIndex.intValue()];
-            this.comPort.readBytes(secondByteArray, byteIndex.intValue());
-            byte[] thirdByteArray = new byte[1];
-            this.comPort.readBytes(thirdByteArray, 1);
-            byte[] finalByteArray = new byte[byteArray.length+secondByteArray.length+thirdByteArray.length];
-            for(int i = 0; i < (5+secondByteArray.length); i++){
-                if(i < (byteArray.length-1)){
-                    finalByteArray[i] = byteArray[i];
-                }else{
-                    secondByteArray[i] = byteArray[i];
-                }
-            }
-            finalByteArray[finalByteArray.length-1] = thirdByteArray[0];
-            for(byte index : finalByteArray){
-                System.out.println(index);
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
+        ArrayList<Byte> rtn = new ArrayList<Byte>();
+        
+        readBytesToArrayList(rtn, 5);
+        readBytesToArrayList(rtn, rtn.get(3).intValue() + 1);
+
+        for(byte index : rtn){
+            System.out.println(index);
         }
     }
+
+    private void readBytesToArrayList(ArrayList<Byte> arr, int bytesToRead) {
+        byte[] buff = new byte[bytesToRead];
+
+        this.comPort.readBytes(buff, bytesToRead);
+
+        for (byte b : buff) {
+            arr.add(b);
+        }
+    } 
 
     public void pingConnection(){
         byte[] command = this.commandToBytes(COMMAND_HEADER_AND_ADDRESS+"002c3c");
         this.writeToHuskyLens(command);
-    }
-
-    public void setI2CChannel(int channel){
-        this.channel = channel;
-    }
-
-    public void setI2CAddress(int address) {
-        this.address = address;
-    }
-
-    public void setBaudRate(int baudRate){
-        this.baudRate = baudRate;
-        this.comPort.setBaudRate(this.baudRate);
-    }
-
-    public void setComPort(SerialPort comPort, int baudRate){
-        this.comPort = comPort;
-        this.comPort.setBaudRate(baudRate);
-    }
-
-    public SerialPort getComPort(){
-        return this.comPort;
-    }
-
-    public int getBaudRate(){
-        return this.baudRate;
-    }
-
-    public int getI2CChannel(){
-        return this.channel;
-    }
-
-    public int getI2CAddress(){
-        return this.address;
     }
 }

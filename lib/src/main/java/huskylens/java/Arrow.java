@@ -1,4 +1,5 @@
 package huskylens.java;
+
 public class Arrow {
     private int xTail;
     private int yTail;
@@ -6,7 +7,6 @@ public class Arrow {
     private int yHead;
     private int ID;
     private boolean isLearned;
-    private String type;
 
     public Arrow(int xTail, int yTail, int xHead, int yHead, int ID){
         this.xTail = xTail;
@@ -19,7 +19,6 @@ public class Arrow {
         }else{
             this.isLearned = false;
         }
-        this.type = "ARROW";
     }
 
     public int getXTail(){
@@ -44,9 +43,5 @@ public class Arrow {
 
     public boolean getIsLearned(){
         return this.isLearned;
-    }
-
-    public String getType(){
-        return this.type;
     }
 }
